@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body style="background-color: rgb(94, 93, 93); color: #fff">
+    <form action="/upload" method="POST" enctype="multipart/form-data">
+      <label for="name">Username :</label><br />
+      <input
+        type="text"
+        required
+        name="name"
+        placeholder="Enter username"
+      /><br />
+      <input type="file" id="file" required name="userFile" /><br />
+      <button type="submit">Submit</button>
+    </form>
+  </body>
+</html>
