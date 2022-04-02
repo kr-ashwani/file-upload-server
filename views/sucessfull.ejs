@@ -8,83 +8,30 @@
   </head>
   <body style="background-color: rgb(94, 93, 93); color: #fff">
     <p>form successfully submitted.</p>
-    <p><%= userName%> thanks for your response.</p>
-    <a
-      id="previewLink"
-      href=""
-      target="blank"
-      style="color: #fff !important; margin-bottom: 10px; display: block"
-      data-fileName="<%=fileName%>"
-      >Preview</a
-    >
-    <a
-      id="downloadLink"
-      href=""
-      target="blank"
-      style="color: #fff !important"
-      data-fileName="<%=fileName%>"
-      >Download</a
-    >
+    <p><%= previewData.userName %> thanks for your response.</p>
+    <p>Your roll number is <%= previewData.roll %>.</p>
 
-    <script>
-      // const inputFile = document.getElementById("fileInput");
-      const previewLink = document.getElementById("previewLink");
-      const downloadLink = document.getElementById("downloadLink");
+    <ol>
+      <% previewData.fileArr.forEach((elem)=>{ %>
 
-      const decoder = new TextDecoder("utf-8");
-      console.log(previewLink.dataset.filename);
-      async function getFile() {
-        // fetch(`/getFile/${previewLink.dataset.filename}`).then((response) => {
-        //   response.body
-        //     .getReader()
-        //     .read()
-        //     .then(({ value, done }) => {
-        //       console.log(URL.createObjectURL(new Blob(value)), done);
-        //     });
-        // });
-        const response = await fetch(
-          `/getFile/${previewLink.dataset.filename}`
-        );
-        // const data = await response.json();
-
-        previewLink.setAttribute("href", response.url);
-        downloadLink.setAttribute("href", response.url);
-        downloadLink.setAttribute(
-          "download",
-          previewLink.dataset.filename.split("-").pop()
-        );
-        console.log(response.url);
-        // response
-        //   .then((stream) => {
-        //     return new Response(stream.body);
-        //   })
-        //   .then((response) => response.blob())
-        //   .then((blob) => URL.createObjectURL(blob))
-        //   .then((url) => console.log(url))
-        //   .catch((err) => console.error(err));
-        // const reader = await response.body.getReader();
-        // let charsReceived = 0;
-        // let result = "";
-        // reader.read().then(function processText({ done, value }) {
-        //   if (done) {
-        //     console.log("Stream finished. Content received:");
-        //     console.log(new Blob(result));
-        //     return;
-        //   }
-        //   console.log(`Received ${result.length} chars so far!`);
-        //   result += value;
-        //   return reader.read().then(processText);
-        // });
-      }
-
-      getFile();
-      // inputFile.addEventListener("change", (e) => {
-      //   const file = e.target.files[0];
-      //   const blobUrl = URL.createObjectURL(file);
-      //   previewLink.setAttribute("href", blobUrl);
-      //   downloadLink.setAttribute("href", blobUrl);
-      //   downloadLink.setAttribute("download", file.name);
-      // });
-    </script>
+      <li>
+        <%= elem.fileName%>
+        <a
+          id="previewLink"
+          href="/getFile/<%= elem.filePath %>"
+          target="blank"
+          style="color: #fff !important; margin-bottom: 10px; display: block"
+          >Preview</a
+        >
+        <a
+          id="downloadLink"
+          href="/getFile/<%= elem.filePath%>"
+          target="blank"
+          style="color: #fff !important"
+          >Download</a
+        >
+      </li>
+      <%}) %>
+    </ol>
   </body>
 </html>

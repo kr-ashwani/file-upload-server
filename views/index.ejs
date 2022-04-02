@@ -5,18 +5,71 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <style>
+      #divOutput > * {
+        margin: 10px 0px;
+      }
+    </style>
   </head>
   <body style="background-color: rgb(94, 93, 93); color: #fff">
-    <form action="/upload" method="POST" enctype="multipart/form-data">
+    <form
+      id="form"
+      action="/upload"
+      method="POST"
+      enctype="multipart/form-data"
+    >
       <label for="name">Username :</label><br />
-      <input
-        type="text"
-        required
-        name="name"
-        placeholder="Enter username"
-      /><br />
-      <input type="file" id="file" required name="userFile" /><br />
-      <button type="submit">Submit</button>
+      Name: <input type="name" id="name" name="name" /><br />
+      Roll: <input type="number" id="roll" name="roll" /><br />
+      File: <input type="file" id="file" multiple name="userFiles" /><br />
+      <button id="btnUpload" type="submit">Submit</button>
     </form>
+
+    <div id="divOutput">
+      <p></p>
+    </div>
+
+    <script>
+      const btnUpload = document.getElementById("btnUpload");
+      const form = document.getElementById("form");
+      const divOutput = document.getElementById("divOutput");
+      const f = document.getElementById("file");
+
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        const uniqueRequest =
+          document.getElementById("name").value +
+          Date.now() +
+          "-" +
+          Math.round(Math.random() * 1e2);
+
+        let fileCount = 0;
+        btnUpload.disabled = true;
+        const formData = new FormData();
+        formData.append("name", document.getElementById("name").value);
+        formData.append("roll", document.getElementById("roll").value);
+        const req = new XMLHttpRequest();
+        req.open("POST", `/upload/${uniqueRequest}`, true);
+
+        while (fileCount < f.files.length) {
+          const theFile = f.files[fileCount];
+          formData.append("userFiles", theFile, theFile.name);
+          fileCount++;
+        }
+        req.upload.onprogress = uploadProgress;
+        req.onloadend = () => {
+          btnUpload.disabled = false;
+          window.location.pathname = `/previewfiles/${uniqueRequest}`;
+        };
+
+        function uploadProgress(e) {
+          divOutput.children[0].textContent = `${Math.floor(
+            (e.loaded * 100) / e.total
+          )}% data uploaded.`;
+        }
+        req.send(formData);
+      });
+    </script>
   </body>
 </html>
